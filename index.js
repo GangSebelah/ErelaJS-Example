@@ -1,85 +1,39 @@
-/**
- * Module Imports
- */
-const { Client, Collection, Intents } = require("discord.js");
-const { readdirSync } = require("fs");
-const { TOKEN, PREFIX, OWNERID, clientID, clientSecret, embedColor } = require("./config.json");
-const { Manager } = require("erela.js");
-const Spotify = require("erela.js-spotify")
+const { Client, Partials, IntentsBitField } = require('discord.js');
+const config = require(`${process.cwd()}/config.json`);
+const { readdirSync } = require('fs');
 
 const client = new Client({
-    disableMentions: "everyone",
-    partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
-    ws: { intents: Intents.ALL }
+    allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
+    partials: [ Partials.User, Partials.Channel, Partials.GuildMember, Partials.Message, Partials.Reaction, Partials.GuildScheduledEvent, Partials.ThreadMember ],
+    intents: new IntentsBitField(131071),
+    shards: 'auto'
 });
 
-client.prefix = PREFIX;
-client.owner = OWNERID;
-client.embedColor = embedColor;
-client.commands = new Collection();
-client.categories = readdirSync("./commands/");
-client.logger = require("./utils/logger.js");
-client.emoji = require("./utils/emoji.json");
-client.manager = new Manager({
-    nodes: [{
-        host: "",
-        port: 2333,
-        password: "",
-        retryDelay: 5000,
-    }],
-    send: (id, payload) => {
-        const guild = client.guilds.cache.get(id);
-        if (guild) guild.shard.send(payload);
-    },
-    autoPlay: true,
-    plugins: [new Spotify({
-        clientID,
-        clientSecret
-    })]
+client.prefix = config.Prefix;
+client.owner = config.OwnerId;
+client.color = config.EmbedColor;
+client.logger = require(`${process.cwd()}/Utils/logger`);
+
+// Utils Handling
+client.logger.log(`Loading Handling Utils`, "handling");
+readdirSync(`${process.cwd()}/Utils/`).filter(path => path.split(".")[0] !== "logger").forEach(file => {
+	let Name = file.split(".")[0];
+    let Req = require(`${process.cwd()}/Utils/${file}`);
+    client.logger.log(`Loading Utils ${Name}`, "util");
+	client[Name] = Req;
 });
 
-client.on("raw", (d) => client.manager.updateVoiceState(d));
-
-/**
- * Error Handler
- */
-client.on("disconnect", () => console.log("Bot is disconnecting..."))
-client.on("reconnecting", () => console.log("Bot reconnecting..."))
-client.on('warn', error => console.log(error));
-client.on('error', error => console.log(error));
-process.on('unhandledRejection', error => console.log(error));
-process.on('uncaughtException', error => console.log(error));
-
-/**
- * Client Events
- */
-readdirSync("./events/Client/").forEach(file => {
-    const event = require(`./events/Client/${file}`);
-    let eventName = file.split(".")[0];
-    client.logger.log(`Loading Events Client ${eventName}`, "event");
-    client.on(eventName, event.bind(null, client));
+// Handling
+readdirSync(`${process.cwd()}/Handling/`).forEach(file => {
+    let Name = file.split(".")[0]
+    client.logger.log(`Loading Handling ${Name}`, "handling");
+    require(`${process.cwd()}/Handling/${file}`)(client);
 });
 
-/**
- * Erela Manager Events
- */
-readdirSync("./events/Lavalink/").forEach(file => {
-    const event = require(`./events/Lavalink/${file}`);
-    let eventName = file.split(".")[0];
-    client.logger.log(`Loading Events Lavalink ${eventName}`, "event");
-    client.manager.on(eventName, event.bind(null, client));
-});
+// Error Handling
+client.on('warn', info => console.error(info));
+client.on('error', error => console.error(error));
+process.on('unhandledRejection', error => console.error(error));
+process.on('uncaughtException', error => console.error(error));
 
-/**
- * Import all commands
- */
-readdirSync("./commands/").forEach(dir => {
-    const commandFiles = readdirSync(`./commands/${dir}/`).filter(f => f.endsWith('.js'));
-    for (const file of commandFiles) {
-        const command = require(`./commands/${dir}/${file}`);
-        client.logger.log(`Loading ${command.category} commands ${command.name}`, "cmd");
-        client.commands.set(command.name, command);
-    }
-});
-
-client.login(TOKEN);
+client.login(config.Token);
