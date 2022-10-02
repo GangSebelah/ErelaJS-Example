@@ -1,12 +1,12 @@
 # Discord Music Bot
 
-This is a simple [Erela.JS](https://github.com/MenuDocs/erela.js) example music bot.
+This is a simple [Tomato6966/erela.js](https://github.com/Tomato6966/erela.js) example music bot.
 
 Please edit the `config.json` file first. (Add Token Bot, Prefix, and Owner Bot ID, Spotify clientID, Spotify clientSecret)
 
 ## Requirement
 
-- [discord.js](https://github.com/discordjs/discord.js) v12
+- [discord.js](https://github.com/discordjs/discord.js) v14
 - Java [Azul](https://www.azul.com/downloads/zulu-community/?architecture=x86-64-bit&package=jdk) or [https://adoptopenjdk.net/](https://adoptopenjdk.net/) or [https://sdkman.io/install](https://sdkman.io/install)
 - [Lavalink](https://ci.fredboat.com/viewLog.html?buildId=lastSuccessful&buildTypeId=Lavalink_Build&tab=artifacts&guest=1)
 

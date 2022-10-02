@@ -3,5 +3,8 @@
     "Prefix": "",
     "OwnerId": [ "" ],
     "EmbedColor": "#000",
-	"MongoUrl": ""
+	"MongoUrl": "",
+    "host": "localhost",
+    "password": "password",
+    "port": 0
 }

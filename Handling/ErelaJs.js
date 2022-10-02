@@ -4,35 +4,28 @@ const { Manager } = require("erela.js");
 const Facebook = require("erela.js-facebook");
 const Spotify = require("better-erela.js-spotify").default;
 const AppleMusic = require("better-erela.js-apple").default;
+const { host, password, port } = require(`${process.cwd()}/config.json`);
 
 module.exports = async (client) => {
 
     const nodes = [
         {
-            identifier: "Singapore_Server", 
-            host: "lava1.cruzstudio.tech", port: 80, password: "cruzstudio.tech",
+            identifier: "ASIA1_NODE", host, password, port,
             regions: ["hongkong", "singapore", "sydney", "automatically"],
-            retryAmount: 10, retryDelay: 7500,
         },
         {
-            identifier: "Mumbai_Server", 
-            host: "lava4.cruzstudio.tech", port: 80, password: "cruzstudio.tech",
+            identifier: "ASIA2_NODE", host, password, port,
             regions: ["india", "japan", "south-korea"],
-            retryAmount: 10, retryDelay: 7500,
         },
         {
-            identifier: "NorthCalifornia_Server", 
-            host: "lava2.cruzstudio.tech", port: 80, password: "cruzstudio.tech",
+            identifier: "USA_NODE", host, password, port,
             regions: ["us-east", "us-central", "us-south", "us-west", "brazil"],
-            retryAmount: 10, retryDelay: 7500,
         },
         {
-            identifier: "Frankfurt_Server", 
-            host: "lava3.cruzstudio.tech", port: 80, password: "cruzstudio.tech",
+            identifier: "GERMANY_NODE", host, password, port,
             regions: ["rotterdam", "russia"],
-            retryAmount: 10, retryDelay: 7500,
         },
-    ]
+    ];
 
     // Create Manager
     client.musicManager = new Manager({
