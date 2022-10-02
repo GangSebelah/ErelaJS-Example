@@ -1,8 +1,7 @@
 {
-    "TOKEN": "",
-    "PREFIX": "",
-    "OWNERID": "",
-    "clientID": "",
-    "clientSecret": "",
-    "embedColor": "BLACK"
+    "Token": "",
+    "Prefix": "",
+    "OwnerId": [ "" ],
+    "EmbedColor": "#000",
+	"MongoUrl": ""
 }
